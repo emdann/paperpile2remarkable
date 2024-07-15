@@ -1,12 +1,22 @@
-import os,sys
+import os
 import shutil
 import glob
 import datetime
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--force_upload", action='store_true', help='Force upload to reMarkable.')
-parser.add_argument("--force_download", action='store_true', help='Force download from reMarkable.')
+parser.add_argument("--path2rm", 
+                    default='/Users/emdann/rmirro/remarkable/Papers/',
+                    help='Local path to destination folder on ReMarkable (synced via rmirro).')
+parser.add_argument("--path2pp", 
+                    default='/Users/emdann/Google Drive/My Drive/Paperpile/All Papers/',
+                    help='Local path to destination folder on Paperpile GDrive (synced via GDrive for desktop).')
+parser.add_argument("--force_upload", 
+                    action='store_true', 
+                    help='Force upload to reMarkable.')
+parser.add_argument("--force_download", 
+                    action='store_true', 
+                    help='Force download from reMarkable.')
 args = parser.parse_args()
 
 def find_file_glob(root_dir, filename):
@@ -56,15 +66,15 @@ def sync_file_2_rm(f, gdrive_directory, rm_directory, force_sync=False):
         print(f"Syncing {f} to {rm_directory}")
         shutil.copy(os.path.join(gdrive_directory, f), rm_directory)
 
-### --- Download read papers --- ###
-REMARKABLE_DIR = '/Users/emdann/rmirro/remarkable/Papers/'
-GDRIVE_PAPERPILE = '/Users/emdann/Google Drive/My Drive/Paperpile/All Papers/'
+REMARKABLE_DIR = args.path2rm
+GDRIVE_PAPERPILE = args.path2pp
 
 print('#####################################')
 print('#### Remarkable 2 Paperpile sync ####')
 print('#####################################')
 print('')
 
+### --- Download read papers --- ###
 print('Downloading read papers...')
 pp_files_rm = get_paperpile_like_files(REMARKABLE_DIR)
 for f,t in pp_files_rm.items():
