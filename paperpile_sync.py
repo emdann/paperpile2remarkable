@@ -85,6 +85,13 @@ print('Uploading papers 2 read...')
 SYNC_DIR = f'{GDRIVE_PAPERPILE}/to_remarkable/'
 SYNC_RM_DIR = f'{REMARKABLE_DIR}/To read/'
 files2sync = os.listdir(SYNC_DIR)
+# remove files uploaded to ReMarkable in last sync 
+# (supposedly annotated papers have already been moved to REMARKABLE_DIR)
+files_in_rm = os.listdir(SYNC_RM_DIR)
+old_files = list(set(files_in_rm) - set(files2sync))
+for f in old_files:
+    os.remove(f'{SYNC_RM_DIR}{f}')
+
 if len(files2sync) == 0:
     print('Nothing to sync from Paperpile/to_remarkable')
 for f in files2sync:
